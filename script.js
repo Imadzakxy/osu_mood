@@ -52,6 +52,6 @@ function startGame() {
                 content.innerHTML = "Jeu terminé ! Vous avez raté un target.";
             }
         }, j);
-        j = Math.max( 500, j - 50);
+        j = Math.max( 500, j - 100);
     }, j);
 }
