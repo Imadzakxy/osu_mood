@@ -9,7 +9,8 @@ bot.onclick = function() {
 
 function startGame() {
     let i = 0;
-    let j = 2000;
+    let j = 1000;
+    let k = 2000;
     game_over = false;
     
     bot.remove();
@@ -19,7 +20,7 @@ function startGame() {
     let audio = document.getElementById('background-music');
     audio.play();
     
-    let interval = setInterval(function() {
+    let interval = setInterval(() => {
         if (game_over) {
             clearInterval(interval);
             let newBot = document.createElement('div');
@@ -34,8 +35,8 @@ function startGame() {
         let target = document.createElement('div');
         target.classList.add('target');
         
-        target.style.top = Math.random() * (content.clientHeight - 70) + 'px';
-        target.style.left = Math.random() * (content.clientWidth - 70) + 'px';
+        target.style.top = Math.random() * (content.clientHeight - 80) + 'px';
+        target.style.left = Math.random() * (content.clientWidth - 80) + 'px';
         
         content.appendChild(target);
 
@@ -45,13 +46,14 @@ function startGame() {
             pts.innerHTML = `${i}`;
         };
 
-        setTimeout(function() {
+        setTimeout(() => {
             if (content.contains(target)) {
                 target.remove();
                 game_over = true;
                 content.innerHTML = "Jeu terminé ! Vous avez raté un target.";
             }
-        }, j);
-        j = Math.max( 500, j - 50);
+        }, k);
+        k = Math.max( 500, k - 50);
     }, j);
+    j = Math.max( 500, j - 50);
 }
