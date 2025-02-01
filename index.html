@@ -1,53 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
-    <link href="style.css" type="text/css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="32x32" href="toxic_icon.png">
-  
-    <title>imad.zak.xy</title>
-  </head>
-  <body>
-    <div class="page">
-      
-      <div class="info">
-
-        <div class="stats">
-          <span class="pts">0</span>
-          <span>
-            <p>Best_pc: 55</p>
-            <p>Best_mb: 84</p>
-          </span>
-        </div>
-
-        <div class="input-img">
-          <div class="icon">+</div>
-          <input type="image" src="" alt="">
-        </div>
-        <div class="input-file">
-          <div class="icon">+</div>
-          <input type="file" name="input" id="inp_file">
-        </div>
-
-      </div>
-      
-      <div class="game">
-        <div class="content">
-          <button class="bot"></button>
-        </div>
-
-      </div>
-
-      <script src="script.js"></script>
-
-    </div>
-
-    <audio id="background-music" loop>
-      <source src="chess(M4A_128K).m4a" type="audio/mp3">
-    </audio>    
-
-  </body>
+    <title>Jeu de Cibles Multiples</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="startBtn" onclick="startGame()">Démarrer</button>
+    <div id="gameContainer"></div>
+    <div id="score">Score: 0</div>
+    <audio id="gameAudio" loop>
+        <source src="game-music.mp3" type="audio/mpeg">
+    </audio>
+    <script src="script.js"></script>
+</body>
 </html>

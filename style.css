@@ -1,143 +1,92 @@
-*{
-    margin: 0;
-    padding: 0;
-    font-family: 'Playfair Display', serif; 
-    font-weight: 500; 
-    font-style: italic;
-}
-
-.page , html{
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
+body {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: rgb(19, 18, 18);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+    background: #1a1a1a;
     color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
-.info{
-    height: 50%;
-    width:  10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    backdrop-filter: blur(1px);
-    margin-right: 2%;
-    border: 2px solid gray; 
-    box-shadow: 0 0 5px white;
-}
-
-.input-img{
-    width: 90%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    content: "";
-    background: transparent;
-    backdrop-filter: blur(1px);
-    border-radius: 10px;
-    border: 2px dashed gray; 
-    margin-top: 10%;
-}
-
-.input-file{
-    width: 90%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    content: "";
-    background: transparent;
-    backdrop-filter: blur(1px);
-    border-radius: 10px;
-    border: 2px dashed gray; 
-    margin-top: 10%;
-}
-
-.game{
-    height: 90%;
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle, rgb(65, 64, 64) 0%, rgb(19, 18, 18) 100%);
-    backdrop-filter: blur(1px);
-    border: 2px solid gray;
-    box-shadow: 0 0 10px white;
-    cursor: cell;
-}
-
-.content{
-    width: 100%;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#gameContainer {
+    width: 800px;
+    height: 600px;
+    border: 2px solid #333;
     position: relative;
-    flex-direction: column;
+    margin: 20px;
     overflow: hidden;
-    color: white;
+    background: #2a2a2a;
 }
 
-.bot{
-    height: 60px;
+.target {
     width: 60px;
-    background: url("./bot.png");
-    background-size: cover;
-    border-radius: 50%;
-    box-shadow: white;    
-    margin: 0;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.bot:hover{
-    background-color: rgb(0, 0, 0);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.stats{
-    width: 100%;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    flex-direction: column;
-    color: white;
-    font-size: large;
-}
-
-p{
-    margin-top: 10%;
-}
-
-.stats span{
-    padding: 5px;
-}
-
-.target{
-    margin: 0;
-    padding: 0;
     height: 60px;
-    width: 60px;
     position: absolute;
-    border-radius: 50%;
-    border: 2px solid rgb(48, 45, 45);
-    background: radial-gradient(circle, rgb(212, 210, 210) 0%, rgb(0, 0, 0) 100%);
-    box-shadow: 0 0 20px white;
-    filter: blur(2px);
+    cursor: pointer;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: transform 0.2s;
 }
 
-@keyframes target {
-    to{
-        transform: translateY(-200px) rotate(90deg);
-    }
+.normal {
+    background: #4CAF50;
+    border: 2px solid #45a049;
+}
+
+.moving {
+    background: #ff4444;
+    border: 2px solid #cc0000;
+}
+
+.hold {
+    background: #2196F3;
+    border: 2px solid #1976D2;
+    flex-direction: column;
+}
+
+.progress-bar {
+    width: 80%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    margin-top: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: #FFEB3B;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+#score {
+    font-size: 24px;
+    color: #4CAF50;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
 }
