@@ -34,8 +34,8 @@ function startGame() {
         let target = document.createElement('div');
         target.classList.add('target');
         
-        target.style.top = Math.random() * (content.clientHeight - 60) + 'px';
-        target.style.left = Math.random() * (content.clientWidth - 60) + 'px';
+        target.style.top = Math.random() * (content.clientHeight - 70) + 'px';
+        target.style.left = Math.random() * (content.clientWidth - 70) + 'px';
         
         content.appendChild(target);
 

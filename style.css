@@ -87,7 +87,9 @@
     width: 60px;
     position: absolute;
     border-radius: 50%;
-    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(0, 0, 0) 100%);
+    border: 2px solid rgb(48, 45, 45);
+    background: radial-gradient(circle, rgb(212, 210, 210) 0%, rgb(0, 0, 0) 100%);
+    box-shadow: 0 0 20px white;
     filter: blur(2px);
 }
 
