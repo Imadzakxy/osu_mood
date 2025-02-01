@@ -8,17 +8,18 @@
     width: 100vw;
     height: 100vh;
     margin: 0;
+    transition: background 0.5s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle, rgb(56, 56, 56) 0%, rgb(14, 13, 13) 100%);
+    background: radial-gradient(circle, rgb(65, 64, 64) 0%, rgb(19, 18, 18) 100%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     color: white;
 }
 
-#vites{
+#vitess{
     display: flex;
     align-items: center;
     justify-content: center;
