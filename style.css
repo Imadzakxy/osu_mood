@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url("./backg.jpg");
+    background: radial-gradient(circle, rgb(56, 56, 56) 0%, rgb(14, 13, 13) 100%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -65,7 +65,7 @@
 }
 
 .bot:hover{
-    background-color: rgb(117, 65, 167);
+    background-color: rgb(0, 0, 0);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
@@ -86,7 +86,7 @@
     width: 60px;
     position: absolute;
     border-radius: 50%;
-    background: radial-gradient(circle, rgb(76, 14, 117) 0%, rgb(0, 0, 0) 100%);
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(0, 0, 0) 100%);
     filter: blur(2px);
 }
 
