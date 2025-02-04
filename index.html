@@ -17,37 +17,36 @@
 
         <div class="stats">
           <span class="pts">0</span>
-          <span>
-            <p>Best_pc: 55</p>
-            <p>Best_mb: 84</p>
-          </span>
         </div>
 
         <div class="input-img">
-          <div class="icon">+</div>
-          <input type="image" src="" alt="">
+          <label for="image-upload" class="upload-button">+</label>
+          <input type="file" id="image-upload" accept="image/*" style="display: none;">
+          <img id="preview" src="#" alt="background" style="display: flex;">
         </div>
         <div class="input-file">
-          <div class="icon">+</div>
-          <input type="file" name="input" id="inp_file">
+          <label for="file-upload" class="upload-button">+</label>
+          <input type="file" id="file-upload" accept="audio/*" style="display: none;">
+          <audio id="background-music" loop>
+            <source src="chess(M4A_128K).m4a" type="audio/mp4">
+          </audio> 
         </div>
-
+        
+        
+      
       </div>
       
       <div class="game">
+
         <div class="content">
           <button class="bot"></button>
         </div>
-
+        
       </div>
 
       <script src="script.js"></script>
 
     </div>
-
-    <audio id="background-music" loop>
-      <source src="chess(M4A_128K).m4a" type="audio/mp3">
-    </audio>    
 
   </body>
 </html>

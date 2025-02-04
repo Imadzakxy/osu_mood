@@ -37,8 +37,8 @@
     width: 90%;
     height: 20%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     content: "";
     background: transparent;
     backdrop-filter: blur(1px);
@@ -61,30 +61,65 @@
     margin-top: 10%;
 }
 
+.upload-button {
+    padding: 25px 45px;
+    cursor: pointer;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+#preview {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    
+    background-size: cover;
+    background-position: center;
+}
+
 .game{
     height: 90%;
     width: 80%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    background: radial-gradient(circle, rgb(65, 64, 64) 0%, rgb(19, 18, 18) 100%);
-    backdrop-filter: blur(1px);
+    align-items: center;  
+    flex-direction: column;
+    position: relative;
+    background: url("./backg.jpg");
+    background-position: center;
+    background-size: cover;
     border: 2px solid gray;
     box-shadow: 0 0 10px white;
     cursor: cell;
+    transition: all 0.7s ease;
 }
 
 .content{
     width: 100%;
+    height: 100%;
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
     flex-direction: column;
+    background: transparent;
     overflow: hidden;
     color: white;
+    transition: all 0.7s ease;
+}
+
+.content.active {
+    backdrop-filter: brightness(15%);
+    background-image: 
+        linear-gradient(rgb(121, 116, 116) 2px, transparent 1px),
+        linear-gradient(90deg, rgb(121, 116, 116) 2px, transparent 1px);
+    background-size: 61px 61px;
 }
 
 .bot{
@@ -115,10 +150,6 @@
     font-size: large;
 }
 
-p{
-    margin-top: 10%;
-}
-
 .stats span{
     padding: 5px;
 }
@@ -128,12 +159,19 @@ p{
     padding: 0;
     height: 60px;
     width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     border-radius: 50%;
     border: 2px solid rgb(48, 45, 45);
     background: radial-gradient(circle, rgb(212, 210, 210) 0%, rgb(0, 0, 0) 100%);
     box-shadow: 0 0 20px white;
     filter: blur(2px);
+}
+
+.target:hover {
+    transform: scale(1.1) translateZ(0);
 }
 
 @keyframes target {
