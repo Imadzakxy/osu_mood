@@ -12,28 +12,29 @@
   </head>
   <body>
     <div class="page">
-      
+
+      <div class="warning" id="warning">
+        🔄 Veuillez tourner votre téléphone
+      </div>
+
       <div class="info">
 
         <div class="stats">
           <span class="pts">0</span>
+          <span class="best">0</span>
         </div>
 
         <div class="input-img">
           <label for="image-upload" class="upload-button">+</label>
           <input type="file" id="image-upload" accept="image/*" style="display: none;">
-          <img id="preview" src="#" alt="background" style="display: flex;">
+          <img id="preview" src="#" alt="backg" style="display: flex;">
         </div>
         <div class="input-file">
           <label for="file-upload" class="upload-button">+</label>
           <input type="file" id="file-upload" accept="audio/*" style="display: none;">
-          <audio id="background-music" loop>
-            <source src="chess(M4A_128K).m4a" type="audio/mp4">
-          </audio> 
+          <audio id="music" src="chess(M4A_128K).m4a" alt="audio" type="audio/" loop></audio> 
         </div>
-        
-        
-      
+
       </div>
       
       <div class="game">

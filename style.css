@@ -21,7 +21,7 @@
 }
 
 .info{
-    height: 50%;
+    height: 70%;
     width:  10%;
     display: flex;
     justify-content: center;
@@ -31,6 +31,20 @@
     margin-right: 2%;
     border: 2px solid gray; 
     box-shadow: 0 0 5px white;
+}
+
+.stats{
+    width: 100%;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: large;
+}
+
+.stats span{
+    margin-bottom: 15%;
 }
 
 .input-img{
@@ -44,7 +58,8 @@
     backdrop-filter: blur(1px);
     border-radius: 10px;
     border: 2px dashed gray; 
-    margin-top: 10%;
+    margin-top: 25%;
+    font-size: small;
 }
 
 .input-file{
@@ -58,11 +73,12 @@
     backdrop-filter: blur(1px);
     border-radius: 10px;
     border: 2px dashed gray; 
-    margin-top: 10%;
+    margin-top: 25%;
 }
 
 .upload-button {
-    padding: 25px 45px;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
     position: absolute;
     display: flex;
@@ -140,20 +156,6 @@
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
-.stats{
-    width: 100%;
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    flex-direction: column;
-    color: white;
-    font-size: large;
-}
-
-.stats span{
-    padding: 5px;
-}
-
 .target{
     margin: 0;
     padding: 0;
@@ -172,6 +174,18 @@
 
 .target:hover {
     transform: scale(1.1) translateZ(0);
+}
+
+.warning{
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    padding: 20px; 
+    background: #4e4d4d; 
+    text-align: center;
+    z-index: 2;
 }
 
 @keyframes target {
