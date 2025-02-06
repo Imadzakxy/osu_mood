@@ -22,7 +22,7 @@
 }
 
 .info{
-    height: 70%;
+    height: 75%;
     width:  10%;
     display: flex;
     justify-content: center;
@@ -45,6 +45,11 @@
     gap: 20px;
 }
 
+p{
+    font-size: small;
+    color: rgb(170, 165, 165);
+}
+
 .input-img{
     width: 90%;
     height: 20%;
@@ -53,10 +58,8 @@
     justify-content: center;
     content: "";
     background: transparent;
-    backdrop-filter: blur(1px);
     border-radius: 10px;
     border: 2px dashed gray; 
-    font-size: small;
 }
 
 .input-file{
@@ -73,13 +76,14 @@
 }
 
 .upload-button {
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 20%;
     cursor: pointer;
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none;
+    position: absolute;
     z-index: 1;
 }
 
@@ -89,8 +93,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none;
     border-radius: 10px;
-    
     background-size: cover;
     background-position: center;
 }
