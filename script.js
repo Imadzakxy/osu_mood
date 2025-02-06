@@ -7,6 +7,8 @@ let game = document.querySelector('.game');
 let rst = document.querySelector('.rst');
 let game_over = false;
 
+alert("dans info y a pts dans la partie best score\nvous pouvez changer le background et l'audio");
+
 function check(){
     if(window.matchMedia("(orientation: portrait)").matches) {
         document.getElementById("warning").style.display = "block";
