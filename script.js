@@ -7,133 +7,100 @@ let game = document.querySelector(".game");
 let rst = document.querySelector(".rst");
 let game_over = false;
 
-let audioCtx;
-let analyser;
-let dataArray;
-let bufferLength;
-let mapping = []; // tableau des beats détectés
-let currentHash = null;
-let useMapping = false;
+let audioCtx, analyser, dataArray;
+let score = 0;
+let speed = 1500;
+let lastSpawn = 0;
+let delay = 500;
 
 alert(
   "dans info y a les pts dans la partie et best score\nvous pouvez changer le background et l'audio\nactualiser si vous reseter"
 );
 
-// ⚡ Hash SHA-256 du fichier
-async function getHash(file) {
-  const buf = await file.arrayBuffer();
-  const digest = await crypto.subtle.digest("SHA-256", buf);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
+// Vérif portrait
 function check() {
-  if (window.matchMedia("(orientation: portrait)").matches) {
-    document.getElementById("warning").style.display = "block";
-  } else {
-    document.getElementById("warning").style.display = "none";
-  }
+  document.getElementById("warning").style.display = window.matchMedia(
+    "(orientation: portrait)"
+  ).matches
+    ? "block"
+    : "none";
 }
-
 window.addEventListener("load", check);
 window.addEventListener("resize", check);
 
+// Upload image
 document
   .getElementById("image-upload")
-  .addEventListener("change", function (event) {
-    let file = event.target.files[0];
+  .addEventListener("change", function (e) {
+    let file = e.target.files[0];
     const preview = document.getElementById("preview");
-
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
-      reader.onload = function (e) {
-        preview.src = e.target.result;
+      reader.onload = function (ev) {
+        preview.src = ev.target.result;
         preview.style.display = "flex";
-        game.style.backgroundImage = `url(${e.target.result})`;
-        localStorage.setItem("image", preview.src);
+        game.style.backgroundImage = `url(${ev.target.result})`;
       };
       reader.readAsDataURL(file);
     }
   });
 
-document
-  .getElementById("file-upload")
-  .addEventListener("change", async function (event) {
-    let file = event.target.files[0];
-    if (file && file.type.startsWith("audio/")) {
-      audio.src = URL.createObjectURL(file);
+// Upload audio
+document.getElementById("file-upload").addEventListener("change", function (e) {
+  let file = e.target.files[0];
+  if (file && file.type.startsWith("audio/")) {
+    audio.src = URL.createObjectURL(file);
+  }
+});
 
-      // ⚡ Calcul hash du fichier
-      currentHash = await getHash(file);
-
-      // Vérifie si un mapping existe déjà
-      if (localStorage.getItem(currentHash)) {
-        mapping = JSON.parse(localStorage.getItem(currentHash));
-        useMapping = true;
-      } else {
-        mapping = [];
-        useMapping = false;
-      }
-
-      localStorage.setItem("audio", audio.src);
-    }
-  });
-
-function loadimage() {
+// Load image/audio/best
+function loadImage() {
   if (localStorage.getItem("image")) {
     preview.src = localStorage.getItem("image");
     game.style.backgroundImage = `url(${localStorage.getItem("image")})`;
   }
 }
-
-function loadaudio() {
+function loadAudio() {
   if (localStorage.getItem("audio")) {
     audio.src = localStorage.getItem("audio");
     audio.load();
   }
 }
-
-function loadbest() {
-  if (localStorage.getItem("best")) {
-    best.innerHTML = `${localStorage.getItem("best")}`;
-  }
+function loadBest() {
+  if (localStorage.getItem("best"))
+    best.innerHTML = localStorage.getItem("best");
 }
-
 document.addEventListener("DOMContentLoaded", () => {
-  loadimage();
-  loadaudio();
-  loadbest();
+  loadImage();
+  loadAudio();
+  loadBest();
 });
 
+// Reset
 rst.onclick = function () {
   if (localStorage.getItem("image")) localStorage.removeItem("image");
   if (localStorage.getItem("audio")) localStorage.removeItem("audio");
-  if (currentHash) localStorage.removeItem(currentHash);
 };
 
-function createBotButton() {
+// Bouton rejouer
+function createBot() {
   let newBot = document.createElement("div");
   newBot.classList.add("bot");
   newBot.onclick = startGame;
   content.appendChild(newBot);
 }
+bot.onclick = startGame;
 
-bot.onclick = function () {
-  startGame();
-};
-
+// Start game
 function startGame() {
   game_over = false;
   content.classList.add("active");
   pts.innerHTML = "0";
-  i = 0;
+  score = 0;
   speed = 1500;
   lastSpawn = 0;
 
-  if (document.querySelector(".bot")) {
-    document.querySelector(".bot").remove();
-  }
+  if (document.querySelector(".bot")) document.querySelector(".bot").remove();
   content.innerHTML = "";
 
   audio.pause();
@@ -143,45 +110,28 @@ function startGame() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   analyser = audioCtx.createAnalyser();
   let source = audioCtx.createMediaElementSource(audio);
-
   source.connect(analyser);
   analyser.connect(audioCtx.destination);
 
   analyser.fftSize = 256;
-  bufferLength = analyser.frequencyBinCount;
-  dataArray = new Uint8Array(bufferLength);
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-  // ⚡ soit on rejoue le mapping sauvegardé, soit on analyse en live
-  if (useMapping && mapping.length > 0) {
-    playFromMapping();
-  } else {
-    detectBeat();
-  }
+  detectBeat();
 }
 
-let i = 0;
-let speed = 1500;
-let lastSpawn = 0;
-let spawnDelay = 500;
-
+// Détection beats → création cible
 function detectBeat() {
   if (game_over) return;
 
   analyser.getByteFrequencyData(dataArray);
-
   let bass = dataArray.slice(0, 10).reduce((a, b) => a + b, 0) / 10;
   let now = performance.now();
 
-  if (bass > 180 && now - lastSpawn > spawnDelay) {
-    let time = audio.currentTime;
+  if (bass > 180 && now - lastSpawn > delay) {
     let x = Math.random() * (content.clientHeight - 80);
     let y = Math.random() * (content.clientWidth - 80);
 
     spawnTarget(x, y);
-
-    // Sauvegarde dans mapping
-    mapping.push({ time, x, y });
-    localStorage.setItem(currentHash, JSON.stringify(mapping));
 
     lastSpawn = now;
   }
@@ -189,42 +139,25 @@ function detectBeat() {
   requestAnimationFrame(detectBeat);
 }
 
-function playFromMapping() {
-  let idx = 0;
-
-  function step() {
-    if (game_over || idx >= mapping.length) return;
-    if (audio.currentTime >= mapping[idx].time) {
-      spawnTarget(mapping[idx].x, mapping[idx].y);
-      idx++;
-    }
-    requestAnimationFrame(step);
-  }
-
-  step();
-}
-
+// Création d'une cible
 function spawnTarget(top, left) {
   if (game_over) return;
 
   let target = document.createElement("div");
   target.classList.add("target");
-
   target.style.top = top + "px";
   target.style.left = left + "px";
-
   content.appendChild(target);
 
   target.onclick = function () {
     if (game_over) return;
     target.remove();
-    i++;
-    if (parseInt(best.textContent) < i) {
-      best.innerHTML = `${i}`;
-      localStorage.setItem("best", i);
+    score++;
+    if (parseInt(best.textContent) < score) {
+      best.innerHTML = score;
+      localStorage.setItem("best", score);
     }
-    pts.innerHTML = `${i}`;
-    speed = Math.max(500, speed - 20);
+    pts.innerHTML = score;
   };
 
   setTimeout(() => {
@@ -234,7 +167,7 @@ function spawnTarget(top, left) {
       content.innerHTML = "Jeu terminé ! Vous avez raté un target.";
       audio.pause();
       audio.currentTime = 0;
-      createBotButton();
+      createBot();
     }
   }, speed);
 }
