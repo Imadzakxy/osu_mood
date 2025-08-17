@@ -11,10 +11,22 @@ let audioCtx;
 let analyser;
 let dataArray;
 let bufferLength;
+let mapping = []; // tableau des beats détectés
+let currentHash = null;
+let useMapping = false;
 
 alert(
   "dans info y a les pts dans la partie et best score\nvous pouvez changer le background et l'audio\nactualiser si vous reseter"
 );
+
+// ⚡ Hash SHA-256 du fichier
+async function getHash(file) {
+  const buf = await file.arrayBuffer();
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 function check() {
   if (window.matchMedia("(orientation: portrait)").matches) {
@@ -47,16 +59,24 @@ document
 
 document
   .getElementById("file-upload")
-  .addEventListener("change", function (event) {
+  .addEventListener("change", async function (event) {
     let file = event.target.files[0];
-
     if (file && file.type.startsWith("audio/")) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        audio.src = URL.createObjectURL(file);
-        localStorage.setItem("audio", audio.src);
-      };
-      reader.readAsDataURL(file);
+      audio.src = URL.createObjectURL(file);
+
+      // ⚡ Calcul hash du fichier
+      currentHash = await getHash(file);
+
+      // Vérifie si un mapping existe déjà
+      if (localStorage.getItem(currentHash)) {
+        mapping = JSON.parse(localStorage.getItem(currentHash));
+        useMapping = true;
+      } else {
+        mapping = [];
+        useMapping = false;
+      }
+
+      localStorage.setItem("audio", audio.src);
     }
   });
 
@@ -87,29 +107,38 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 rst.onclick = function () {
-  if (localStorage.getItem("image")) {
-    localStorage.removeItem("image");
-  }
-  if (localStorage.getItem("audio")) {
-    localStorage.removeItem("audio");
-  }
+  if (localStorage.getItem("image")) localStorage.removeItem("image");
+  if (localStorage.getItem("audio")) localStorage.removeItem("audio");
+  if (currentHash) localStorage.removeItem(currentHash);
 };
+
+function createBotButton() {
+  let newBot = document.createElement("div");
+  newBot.classList.add("bot");
+  newBot.onclick = startGame;
+  content.appendChild(newBot);
+}
 
 bot.onclick = function () {
   startGame();
 };
 
 function startGame() {
-  if (!game_over) {
-    content.classList.toggle("active");
-  }
-
-  audio.play();
-
   game_over = false;
+  content.classList.add("active");
+  pts.innerHTML = "0";
+  i = 0;
+  speed = 1500;
+  lastSpawn = 0;
 
-  document.querySelector(".bot").remove();
+  if (document.querySelector(".bot")) {
+    document.querySelector(".bot").remove();
+  }
   content.innerHTML = "";
+
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
 
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   analyser = audioCtx.createAnalyser();
@@ -122,11 +151,12 @@ function startGame() {
   bufferLength = analyser.frequencyBinCount;
   dataArray = new Uint8Array(bufferLength);
 
-  i = 0;
-  speed = 1500;
-  lastSpawn = 0;
-
-  detectBeat();
+  // ⚡ soit on rejoue le mapping sauvegardé, soit on analyse en live
+  if (useMapping && mapping.length > 0) {
+    playFromMapping();
+  } else {
+    detectBeat();
+  }
 }
 
 let i = 0;
@@ -143,23 +173,50 @@ function detectBeat() {
   let now = performance.now();
 
   if (bass > 180 && now - lastSpawn > spawnDelay) {
-    spawnTarget();
+    let time = audio.currentTime;
+    let x = Math.random() * (content.clientHeight - 80);
+    let y = Math.random() * (content.clientWidth - 80);
+
+    spawnTarget(x, y);
+
+    // Sauvegarde dans mapping
+    mapping.push({ time, x, y });
+    localStorage.setItem(currentHash, JSON.stringify(mapping));
+
     lastSpawn = now;
   }
 
   requestAnimationFrame(detectBeat);
 }
 
-function spawnTarget() {
+function playFromMapping() {
+  let idx = 0;
+
+  function step() {
+    if (game_over || idx >= mapping.length) return;
+    if (audio.currentTime >= mapping[idx].time) {
+      spawnTarget(mapping[idx].x, mapping[idx].y);
+      idx++;
+    }
+    requestAnimationFrame(step);
+  }
+
+  step();
+}
+
+function spawnTarget(top, left) {
+  if (game_over) return;
+
   let target = document.createElement("div");
   target.classList.add("target");
 
-  target.style.top = Math.random() * (content.clientHeight - 80) + "px";
-  target.style.left = Math.random() * (content.clientWidth - 80) + "px";
+  target.style.top = top + "px";
+  target.style.left = left + "px";
 
   content.appendChild(target);
 
   target.onclick = function () {
+    if (game_over) return;
     target.remove();
     i++;
     if (parseInt(best.textContent) < i) {
@@ -171,17 +228,13 @@ function spawnTarget() {
   };
 
   setTimeout(() => {
-    if (content.contains(target)) {
+    if (content.contains(target) && !game_over) {
       target.remove();
       game_over = true;
       content.innerHTML = "Jeu terminé ! Vous avez raté un target.";
       audio.pause();
       audio.currentTime = 0;
-      let newBot = document.createElement("div");
-      newBot.classList.add("bot");
-      newBot.onclick = startGame;
-      content.appendChild(newBot);
-      pts.innerHTML = `${0}`;
+      createBotButton();
     }
   }, speed);
 }
